@@ -2,54 +2,53 @@ const { default: axios } = require("axios");
 const { createStore, applyMiddleware } = require("redux");
 const { default: thunk } = require("redux-thunk");
 
-// constens
-const TODO_SUCCES = "TODO_SUCCS";
-const TODO_FAILD = "TODO_FAILD";
-const TODO_REQUEST = "TODO_REQUEST";
-const TODO_URL = "https:jsonplaceholder.typicode.com/todos";
+// constenst
+const TODOS_REQUEST = "TODOS_REQUEST";
+const TODOS_SUCCESS = "TODOS_SUCCESS";
+const TODOS_FAILD = "TODOS_FAILD";
+const TODOS_URL = "https://jsonplaceholder.typicode.com/todos";
 
 // state
-const initialTodoState = {
+const initialTodosState = {
   todos: [],
   isLodding: true,
   error: null,
 };
 
 // action
-const todoRequest = () => {
+const todosRequest = () => {
   return {
-    type: TODO_REQUEST,
+    type: TODOS_REQUEST,
   };
 };
-const todoSucces = (todos) => {
+const todosSuccess = (todos) => {
   return {
-    type: TODO_SUCCES,
+    type: TODOS_SUCCESS,
     payload: todos,
   };
 };
-const todoFaild = (error) => {
+const todosFaild = (error) => {
   return {
-    type: TODO_FAILD,
+    type: TODOS_FAILD,
     payload: error,
   };
 };
 
 // reducer
-
-const todosReducer = (state = initialTodoState, action) => {
+const todosReducer = (state = initialTodosState, action) => {
   switch (action.type) {
-    case TODO_REQUEST:
+    case TODOS_REQUEST:
       return {
         ...state,
         isLodding: true,
       };
-    case TODO_SUCCES:
+    case TODOS_SUCCESS:
       return {
         isLodding: false,
         todos: [...state.todos, action.payload],
         error: null,
       };
-    case TODO_FAILD:
+    case TODOS_FAILD:
       return {
         ...state,
         isLodding: false,
@@ -61,29 +60,28 @@ const todosReducer = (state = initialTodoState, action) => {
   }
 };
 
-// fetch Data
-const fetchData = () => {
+// fetch data
+const fetchTodos = () => {
   return (dispatch) => {
-    dispatch(todoRequest());
+    dispatch(todosRequest());
     axios
-      .get(TODO_URL)
+      .get(TODOS_URL)
       .then((res) => {
         const todos = res.data;
-        const titles = todos.map((todo) => todo.title);
-        dispatch(todoSucces(titles));
+        const title = todos.map((todo) => todo.title);
+        dispatch(todosSuccess(title));
       })
       .catch((error) => {
         const errorMessage = error.message;
-        dispatch(todoFaild(errorMessage));
+        dispatch(todosFaild(errorMessage));
       });
   };
 };
 
 // store
-
 const store = createStore(todosReducer, applyMiddleware(thunk));
 store.subscribe(() => {
   console.log(store.getState());
 });
 
-store.dispatch(fetchData());
+store.dispatch(fetchTodos());
