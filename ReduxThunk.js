@@ -6,7 +6,7 @@ const { default: thunk } = require("redux-thunk");
 const TODOS_REQUEST = "TODOS_REQUEST";
 const TODOS_SUCCESS = "TODOS_SUCCESS";
 const TODOS_FAILD = "TODOS_FAILD";
-const TODOS_URL = "https://jsonplaceholder.typicode.com/todos";
+const TODOS_URL = "https://jsonplaceholder.typicode.com/todo   s";
 
 // state
 const initialTodosState = {
